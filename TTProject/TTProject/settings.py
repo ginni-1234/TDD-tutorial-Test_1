@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from django.utils.translation import ugettext_lazy as _
+
+
+# def gettext_noop(s):
+#     return s
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -109,10 +115,22 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
 USE_I18N = True
+LOCALE_PATHS = []
 
+# Settings for language cookie
+LANGUAGE_COOKIE_NAME = 'django_language'
+LANGUAGE_COOKIE_AGE = None
+LANGUAGE_COOKIE_DOMAIN = None
+LANGUAGE_COOKIE_PATH = '/'
+
+# If you set this to True, Django will format dates, numbers and calendars
+# according to user current locale.
 USE_L10N = True
 
+# If you set this to True, Django will use timezone-aware datetimes.
 USE_TZ = True
 
 
@@ -120,3 +138,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# LANGUAGES = [
+#     'zh-hans', gettext_noop('Simplified Chinese')
+# ]
+LANGUAGES = [
+  ('de', _('German')),
+  ('en', _('English')),
+  ('zh-hans', _('Simplified Chinese')),
+]

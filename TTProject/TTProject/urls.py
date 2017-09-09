@@ -18,6 +18,7 @@ from django.contrib import admin
 from TTapp import views
 
 urlpatterns = [
+   # url(r'^TTProject/', include('TTProject.urls')),
     url(r'^TTapp/', include('TTapp.urls')),
     url(r'^admin/', admin.site.urls),
 ]
