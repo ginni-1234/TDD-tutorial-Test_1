@@ -25,6 +25,10 @@ def detail(request, question_id):
     except Question.DoesNotExist:
         raise Http404("Question does not exist")
     return render(request, 'TTapp/detail.html', {'question': question})
+    
+    #Short cut of above code
+    # question = get_object_or_404(Question, pk=question_id)
+    # return render(request, 'polls/detail.html', {'question': question})
 
 def results(request, question_id):
     response = "You're looking at the results of question %s."
