@@ -1,19 +1,21 @@
+import datetime
 from django.test import TestCase
 from django.urls import resolve
 from TTapp.views import index
 from django.http import HttpRequest
 from django.http import HttpResponse
+from django.utils import timezone
+from .models import Question
 
-class HomePageTest(TestCase):
-# Create your tests here.
-    # def test_root_url_resolves_to_home_page_view(self):
-    #     found = resolve('/')
-    #     self.assertEqual(found.func, index)
 
-    # def test_home_page_returned_correct_html(self):
-    #     request = HttpRequest()
-    #     response = index(request)
-    #     html = response.content.decode('utf8')
-    #     self.assertTrue(html.startswith('<html'))
-    #     self.assertIn('<title>To-Do lists</title>',html)
-    #     self.assertTrue(html.endswith('</html>'))
+class QuestionModelTests(TestCase):
+
+    def test_was_published_recently_with_future_question(self):
+        """
+        was_published_recently() returns False for questions whose pub_date
+        is in the future.
+        """
+        time = timezone.now() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=time)
+        self.assertIs(future_question.was_published_recently(), False)
+
