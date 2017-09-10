@@ -4,36 +4,33 @@ from .models import Question, Choice
 from django.template import loader
 from django.http import Http404
 from django.urls import reverse
+from django.views import generic
+from .models import Choice, Question
+from django.utils import timezone
 
-def index(request):
-    if request.LANGUAGE_CODE =='zh-hans':
-        return HttpResponse(request.LANGUAGE_CODE)
-    else:
-        latest_question_list = Question.objects.order_by('-pub_date')[:5]
-        context = {'latest_question_list': latest_question_list}
-        return render(request, 'TTapp/index.html', context)
-        #return HttpResponse("You prefer to read another language.")
+class IndexView(generic.ListView):
+    template_name = 'TTapp/index.html'
+    context_object_name = 'latest_question_list'
+
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'TTapp/detail.html'
+
+
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'TTapp/results.html'
+
 
 def TT_Site(request):
     if request.LANGUAGE_CODE =='zh-hans':
         return HttpResponse("This is TT site")
     else:
         return HttpResponse("You prefer to read another language. This is TT site")
-
-def detail(request, question_id):
-    try:
-        question = Question.objects.get(pk=question_id)
-    except Question.DoesNotExist:
-        raise Http404("Question does not exist")
-    return render(request, 'TTapp/detail.html', {'question': question})
-    
-    #Short cut of above code
-    # question = get_object_or_404(Question, pk=question_id)
-    # return render(request, 'polls/detail.html', {'question': question})
-
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'TTapp/results.html', {'question': question})
 
 
 def vote(request, question_id):
@@ -53,4 +50,6 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('TTapp:results', args=(question.id,)))
+
+
 
